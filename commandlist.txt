@@ -1,0 +1,17 @@
+Sequence,SYSTem:SEQuencer ON|SYSTem:SEQuencer OFF,,drop
+Mode IQ,TRIGger[:SEQuence]:OPTimeze:MODE MORMal|MJITter|HAMJitter,,drop
+Center Fre,FREQ:CENT value GHz, 17.95,input
+span,SPEC:FREQ:SPAN value MHz,600,input
+Res BW1,SPEC:BAND value KHz,100,input
+Res BW2,SPEC:BAND:AUTO OFF|SPEC:BAND:AUTO ON,,drop
+Input,FEED RF|FEED AIQ|FEED EMIXer,,drop
+RF Port,FEED:RF:PORT RRH1FHD2|FEED:RF:PORT RRH1FHD1|FEED:RF:PORT RFIO HD|FEED:RF:PORT RF Input,,drop
+Z Correction,CORR:IMP 50|CORR:IMP 75,,drop
+All Screens,INST:COUP:SCR:INP OFF|INST:COUP:SCR:INP ON,,drop
+RF Out,OUT OFF|OUT ON,,drop
+RF Out Port,FEED:RF:PORT:OUTP NONE|FEED:RF:PORT:OUTP RRH1RFHD2|FEED:RF:PORT:OUTP RRH1RFHD1|FEED:RF:PORT:OUTP RFIO HD|FEED:RF:PORT:OUTP RF Output,,drop
+RF Power,SOUR:POW value dBm,5.8,input
+Frequency1,SOURCE:FREQ value GHz,1.1,input
+Modulation,OUTP:MOD OFF|OUTP:MOD ON,,drop
+Frequency2,SOURCE:FREQ value GHz,28.68,input
+Freq Refer,SOURCE:FREQ:REF value Hz,0.00,input
