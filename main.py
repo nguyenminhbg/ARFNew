@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt
 import  arfmodel
 from arfmodel import ARFModel
 import re
+from PyQt6.QtGui import QIcon
 
 class main_window(QMainWindow):
     # Địa chỉ IP của thiết bị
@@ -33,6 +34,8 @@ class main_window(QMainWindow):
         self.edDevice.textChanged.connect(self.name_on_text_changed)
         self.checkConnect.clicked.connect(self.check_connect)
 
+    def log_show(self, value):
+        self.logshow.append(value)
 
     def name_on_text_changed(self, text):
         self.Device_name = text
@@ -46,6 +49,8 @@ class main_window(QMainWindow):
             msg = QMessageBox()
             msg.setWindowTitle(status)
             msg.setText(message)
+            self.log_show(status)
+            self.log_show(message)
             msg.exec()
             return
 
@@ -86,11 +91,13 @@ class main_window(QMainWindow):
             instrument = rm.open_resource(self.VISA_RESOURCE)
             # Thiết lập timeout (nếu cần)
             instrument.timeout = 5000  # Đặt timeout là 5 giây
+            self.log_show(self.singleCmd.text())
             response1 = instrument.query(self.singleCmd.text())
+            self.log_show(response1)
                     # instrument.write("CONF:VPEAK")  # Cấu hình chế độ đo điện áp Peak
             instrument.close()
         except Exception as e:
-            print("Loi")
+            self.log_show("Fail to send command")
 
 
     def send_allCommand(self):
@@ -126,8 +133,9 @@ class main_window(QMainWindow):
                                 print(self.my_dict[key])
             for key, value in self.my_dict.items():
                 #instrument.write(value)  # Ví dụ: chuyển thiết bị sang chế độ remote
+                self.log_show(f"cmd: {value}")
                 response = instrument.query(value)
-                print("Thiết bị trả về:", response)
+                self.log_show(f"Respone: {response}")
             instrument.close()
         except Exception as e:
             print("Loi")
@@ -143,21 +151,24 @@ class main_window(QMainWindow):
         with open(file_path, "r", encoding="utf-8") as file:
             for line in file:
                 values = line.strip().split(",")
-                data_temp.append(values)
+                if values == ['']:
+                    print("There a empty line")
+                else:
+                    data_temp.append(values)
             # for i in range(0, len(data_temp), 4):
             #     chunk = data_temp[i:i + 4]
             #     self.create_item(chunk)
             while True:
-                if len(data_temp) >= 4:
-                    print(f"len: {len(data_temp)}")
-                    chunk = data_temp[:4]  # Lấy 4 phần tử đầu tiên
-                    self.create_item(chunk)  # Xử lý nhóm 4 phần t
-                    data_temp = data_temp[4:]  # Xóa 4 phần tử đầu tiên
-                elif len(data_temp) >= 3:
+                # if len(data_temp) >= 4:
+                #     print(f"len: {len(data_temp)}")
+                #     chunk = data_temp[:4]  # Lấy 4 phần tử đầu tiên
+                #     self.create_item(chunk)  # Xử lý nhóm 4 phần t
+                #     data_temp = data_temp[4:]  # Xóa 4 phần tử đầu tiên
+                if len(data_temp) >= 3:
                     chunk = data_temp[:3]  # Lấy 4 phần tử đầu tiên
                     self.create_item(chunk)  # Xử lý nhóm 4 phần t
                     data_temp = data_temp[3:]  # Xóa 4 phần tử đầu tiên
-                    break
+
                 elif len(data_temp) >= 2:
                     chunk = data_temp[:2]  # Lấy 4 phần tử đầu tiên
                     self.create_item(chunk)  # Xử lý nhóm 4 phần t
@@ -177,15 +188,18 @@ class main_window(QMainWindow):
             if idx ==0:
                 qhLayout1 = QHBoxLayout()
                 checkbox1 = QCheckBox()
+                checkbox1.setMaximumWidth(25)
                 #checkbox1.setFixedSize(35, 35)
                 checkbox1.setChecked(True)
                 label1 = QLabel(item[0])
-                label1.setFixedWidth(75)
-                label1.setMaximumWidth(75)
+                label1.setFixedWidth(100)
+                label1.setMaximumWidth(100)
                 #label1.setFixedSize(125,35)
                 label1.setAlignment(Qt.AlignmentFlag.AlignLeft)
                 if "drop" in item[3]:
                     combobox1 = QComboBox(self)
+                    combobox1.setFixedWidth(150)
+                    combobox1.setMaximumWidth(150)
                     combobox1.setStyleSheet("""
                         QComboBox {
                             border-top: 1px solid gray;
@@ -202,6 +216,8 @@ class main_window(QMainWindow):
                     qhLayout1.addWidget(combobox1)
                 if "input" in item[3]:
                     line_edit1 = QLineEdit(self)
+                    line_edit1.setFixedWidth(150)
+                    line_edit1.setMaximumWidth(150)
                     line_edit1.setStyleSheet("""
                         QLineEdit {
                             border-top: 1px solid gray;
@@ -225,16 +241,18 @@ class main_window(QMainWindow):
             if idx == 1:
                 qhLayout2 = QHBoxLayout()
                 checkbox2 = QCheckBox()
+                checkbox2.setMaximumWidth(25)
                 #checkbox2.setFixedSize(35, 35)
                 checkbox2.setChecked(True)
                 label2 = QLabel(item[0])
-                label2.setFixedWidth(75)
-                label2.setMaximumWidth(75)
+                label2.setFixedWidth(100)
+                label2.setMaximumWidth(100)
                 #label2.setFixedSize(125, 35)
                 label2.setAlignment(Qt.AlignmentFlag.AlignLeft)
-                print(f"item0: {item[0]}")
                 if "drop" in item[3]:
                     combobox2 = QComboBox(self)
+                    combobox2.setFixedWidth(150)
+                    combobox2.setMaximumWidth(150)
                     combobox2.setStyleSheet("""
                         QComboBox {
                             border-top: 1px solid gray;
@@ -252,6 +270,8 @@ class main_window(QMainWindow):
                     qhLayout2.addWidget(combobox2)
                 if "input" in item[3]:
                     line_edit2 = QLineEdit(self)
+                    line_edit2.setFixedWidth(150)
+                    line_edit2.setMaximumWidth(150)
                     line_edit2.setStyleSheet("""
                         QLineEdit {
                             border-top: 1px solid gray;
@@ -276,16 +296,18 @@ class main_window(QMainWindow):
             if idx == 2:
                 qhLayout3 = QHBoxLayout()
                 checkbox3 = QCheckBox()
+                checkbox3.setMaximumWidth(25)
                 #checkbox3.setFixedSize(35, 35)
                 checkbox3.setChecked(True)
                 label3 = QLabel(item[0])
-                label3.setFixedWidth(75)
-                label3.setMaximumWidth(75)
-                model3 = ARFModel(True, item[0], "", item[2], "","")
+                label3.setFixedWidth(100)
+                label3.setMaximumWidth(100)
                 #label3.setFixedSize(125, 35)
                 label3.setAlignment(Qt.AlignmentFlag.AlignLeft)
                 if "drop" in item[3]:
                     combobox3 = QComboBox(self)
+                    combobox3.setFixedWidth(150)
+                    combobox3.setMaximumWidth(150)
                     combobox3.setStyleSheet("""
                         QComboBox {
                             border-top: 1px solid gray;
@@ -303,6 +325,8 @@ class main_window(QMainWindow):
                     qhLayout3.addWidget(combobox3)
                 if "input" in item[3]:
                     line_edit3 = QLineEdit(self)
+                    line_edit3.setFixedWidth(150)
+                    line_edit3.setMaximumWidth(150)
                     line_edit3.setStyleSheet("""
                         QLineEdit {
                             border-top: 1px solid gray;
@@ -313,8 +337,7 @@ class main_window(QMainWindow):
                     """)
                     #line_edit3.setFixedSize(125, 35)
                     # numbers = re.findall(r'\d+\.?\d*', item[1])
-                    model3.inputvalue = item[2]
-                    line_edit3.setText(model3.inputvalue)
+                    line_edit3.setText(item[2])
                     qhLayout3.addWidget(checkbox3)
                     qhLayout3.addWidget(label3)
                     qhLayout3.addWidget(line_edit3)
@@ -324,54 +347,54 @@ class main_window(QMainWindow):
                 qhLayout3.setStretch(2, 6)
                 layout.addLayout(qhLayout3)
                 self.qh_layout.addLayout(layout)
-            if idx == 2:
-                qhLayout4 = QHBoxLayout()
-                checkbox4 = QCheckBox()
-                # checkbox3.setFixedSize(35, 35)
-                checkbox4.setChecked(True)
-                label4 = QLabel(item[0])
-                label4.setFixedWidth(75)
-                label4.setMaximumWidth(75)
-                # label3.setFixedSize(125, 35)
-                label4.setAlignment(Qt.AlignmentFlag.AlignLeft)
-                if "drop" in item[3]:
-                    combobox4 = QComboBox(self)
-                    combobox4.setStyleSheet("""
-                        QComboBox {
-                            border-top: 1px solid gray;
-                            border-right: 1px solid gray;
-                            border-left: 1px solid gray;
-                            border-bottom: 1px solid gray;
-                        }
-                    """)
-                    # checkbox3.setFixedSize(125, 35)
-                    for cmd in item[1].split("|"):
-                        combobox4.addItem(cmd)
-                    self.my_dict[item[0]] = combobox4.currentText()
-                    qhLayout4.addWidget(checkbox4)
-                    qhLayout4.addWidget(label4)
-                    qhLayout4.addWidget(combobox4)
-                if "input" in item[3]:
-                    line_edit4 = QLineEdit(self)
-                    line_edit4.setStyleSheet("""
-                        QLineEdit {
-                            border-top: 1px solid gray;
-                            border-right: 1px solid gray;
-                            border-left: 1px solid gray;
-                            border-bottom: 1px solid gray;
-                        }
-                    """)
-                    # line_edit3.setFixedSize(125, 35)
-                    # numbers = re.findall(r'\d+\.?\d*', item[1])
-                    qhLayout4.addWidget(checkbox4)
-                    qhLayout4.addWidget(label4)
-                    qhLayout4.addWidget(line_edit4)
-                    self.my_dict[item[0]] = item[1]
-                qhLayout4.setStretch(0, 1)
-                qhLayout4.setStretch(1, 4)
-                qhLayout4.setStretch(2, 6)
-                layout.addLayout(qhLayout4)
-                self.qh_layout.addLayout(layout)
+            # if idx == 3:
+            #     qhLayout4 = QHBoxLayout()
+            #     checkbox4 = QCheckBox()
+            #     # checkbox3.setFixedSize(35, 35)
+            #     checkbox4.setChecked(True)
+            #     label4 = QLabel(item[0])
+            #     label4.setFixedWidth(75)
+            #     label4.setMaximumWidth(75)
+            #     # label3.setFixedSize(125, 35)
+            #     label4.setAlignment(Qt.AlignmentFlag.AlignLeft)
+            #     if "drop" in item[3]:
+            #         combobox4 = QComboBox(self)
+            #         combobox4.setStyleSheet("""
+            #             QComboBox {
+            #                 border-top: 1px solid gray;
+            #                 border-right: 1px solid gray;
+            #                 border-left: 1px solid gray;
+            #                 border-bottom: 1px solid gray;
+            #             }
+            #         """)
+            #         # checkbox3.setFixedSize(125, 35)
+            #         for cmd in item[1].split("|"):
+            #             combobox4.addItem(cmd)
+            #         self.my_dict[item[0]] = combobox4.currentText()
+            #         qhLayout4.addWidget(checkbox4)
+            #         qhLayout4.addWidget(label4)
+            #         qhLayout4.addWidget(combobox4)
+            #     if "input" in item[3]:
+            #         line_edit4 = QLineEdit(self)
+            #         line_edit4.setStyleSheet("""
+            #             QLineEdit {
+            #                 border-top: 1px solid gray;
+            #                 border-right: 1px solid gray;
+            #                 border-left: 1px solid gray;
+            #                 border-bottom: 1px solid gray;
+            #             }
+            #         """)
+            #         # line_edit3.setFixedSize(125, 35)
+            #         # numbers = re.findall(r'\d+\.?\d*', item[1])
+            #         qhLayout4.addWidget(checkbox4)
+            #         qhLayout4.addWidget(label4)
+            #         qhLayout4.addWidget(line_edit4)
+            #         self.my_dict[item[0]] = item[1]
+            #     qhLayout4.setStretch(0, 1)
+            #     qhLayout4.setStretch(1, 4)
+            #     qhLayout4.setStretch(2, 6)
+            #     layout.addLayout(qhLayout4)
+            #     self.qh_layout.addLayout(layout)
         layout.setStretch(0, 1)
         layout.setStretch(1, 1)
         layout.setStretch(2, 1)
@@ -401,10 +424,20 @@ class main_window(QMainWindow):
                                 #     item.status = False
                         # if isinstance(widget, QComboBox):
                         #     print(widget.currentText())
+def resource_path(relative_path):
+    # Hỗ trợ đường dẫn khi build với PyInstaller
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = main_window()
-    window.setWindowTitle('Resizable Window')
+    icon_path = resource_path("ARFIcon.ico")
+    window.setWindowIcon(QIcon(icon_path))
+    window.setWindowTitle('ARF Keysight')
     window.show()  # Hiển thị cửa sổ
     sys.exit(app.exec())  # Đúng trong PyQt6

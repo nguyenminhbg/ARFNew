@@ -41,6 +41,9 @@
           <property name="styleSheet">
            <string/>
           </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -206,37 +209,12 @@ QPushButton:pressed {
             <property name="styleSheet">
              <string/>
             </property>
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
             <layout class="QVBoxLayout" name="verticalLayout_5">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="styleSheet">
-                  <string notr="true">QLabel {
-    font-size: 20px;
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #FF6347;  /* Màu nền */
-    border: 2px solid #000000;  /* Viền */
-    padding: 5px;
-    border-radius: 10px;
-}</string>
-                 </property>
-                 <property name="text">
-                  <string>TE MAI DINH</string>
-                 </property>
-                 <property name="textFormat">
-                  <enum>Qt::PlainText</enum>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_8"/>
+              <widget class="QTextBrowser" name="logshow"/>
              </item>
             </layout>
            </widget>
@@ -273,8 +251,8 @@ QPushButton:pressed {
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>1001</width>
-               <height>442</height>
+               <width>991</width>
+               <height>428</height>
               </rect>
              </property>
             </widget>
@@ -348,7 +326,7 @@ QPushButton:pressed {
      <x>0</x>
      <y>0</y>
      <width>1052</width>
-     <height>18</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
